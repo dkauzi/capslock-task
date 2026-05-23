@@ -1,0 +1,8 @@
+vendor/
+composer.lock
+.env
+tests/_output/
+tests/_support/_generated/
+.idea/
+.vscode/
+.phpunit.cache/

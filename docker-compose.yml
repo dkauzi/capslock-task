@@ -1,0 +1,23 @@
+# Local exec harness. Prism mocks the contract; runner has PHP + Composer +
+# the suite and points at the mock by service name.
+services:
+  mock-api:
+    image: stoplight/prism:4
+    command: mock -h 0.0.0.0 --errors /tmp/contract/openapi.yaml
+    volumes:
+      - ./mock:/tmp/contract:ro
+    ports:
+      - "4010:4010"
+
+  runner:
+    image: composer:2
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      BASE_URL: http://mock-api:4010
+      ENV: docker
+    depends_on:
+      - mock-api
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["sleep infinity"]

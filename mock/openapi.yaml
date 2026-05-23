@@ -1,0 +1,91 @@
+openapi: 3.0.3
+info:
+  title: Media Buyers API
+  version: "1.0.0"
+  description: Contract derived from the Capslock QA test task.
+servers:
+  - url: "{baseUrl}/api"
+    variables:
+      baseUrl:
+        default: http://localhost:4010
+
+paths:
+  /api/mediabuyers:
+    get:
+      summary: List media buyers
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaBuyerList"
+    post:
+      summary: Create a media buyer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MediaBuyerCreate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaBuyerResponse"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    MediaBuyer:
+      type: object
+      required: [id, mbId, initials, name, email, slackUserId, active]
+      properties:
+        id:          { type: integer, minimum: 1, example: 1 }
+        mbId:        { type: string, pattern: "^[0-9]+$", example: "4534" }
+        initials:    { type: string, minLength: 2, maxLength: 2, example: "SJ" }
+        name:        { type: string, minLength: 2, maxLength: 30, example: "Sarah Jones" }
+        email:       { type: string, format: email, example: "sarah.jones@example.com" }
+        slackUserId: { type: string, minLength: 1, maxLength: 32, example: "U0690MMT3KJ" }
+        active:      { type: integer, enum: [0, 1], example: 1 }
+    MediaBuyerCreate:
+      type: object
+      additionalProperties: false
+      required: [mbId, name, email, active]
+      properties:
+        mbId:        { type: string, pattern: "^[1-9][0-9]*$" }
+        initials:    { type: string, minLength: 2, maxLength: 2 }
+        name:        { type: string, minLength: 2, maxLength: 30 }
+        email:       { type: string, format: email }
+        slackUserId: { type: string, minLength: 1, maxLength: 32 }
+        active:      { type: boolean }
+    MediaBuyerList:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/MediaBuyer" }
+    MediaBuyerResponse:
+      type: object
+      required: [data]
+      properties:
+        data: { $ref: "#/components/schemas/MediaBuyer" }
+    ErrorResponse:
+      type: object
+      required: [errors]
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required: [detail]
+            properties:
+              detail: { type: string }

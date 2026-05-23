@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GetMediaBuyersResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id":          { "type": "integer", "minimum": 1 },
+          "mbId":        { "type": "string", "pattern": "^[0-9]+$" },
+          "initials":    { "type": "string", "minLength": 2, "maxLength": 2 },
+          "name":        { "type": "string", "minLength": 2, "maxLength": 30 },
+          "email":       { "type": "string", "format": "email" },
+          "slackUserId": { "type": "string", "minLength": 1, "maxLength": 32 },
+          "active":      { "type": "integer", "enum": [0, 1] }
+        },
+        "required": ["id", "mbId", "initials", "name", "email", "slackUserId", "active"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["data"],
+  "additionalProperties": false
+}

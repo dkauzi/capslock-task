@@ -1,0 +1,11 @@
+actor: ApiTester
+modules:
+    enabled:
+        - REST:
+              url: "%BASE_URL%/api"
+              depends: PhpBrowser
+              part: Json
+        - Asserts
+        - \Tests\Helper\SchemaValidator
+        - \Tests\Helper\ApiClient
+step_decorators: ~
