@@ -208,12 +208,6 @@ In rough order:
 I used it in a governed way: limited, tactical, never for the bits that
 need judgment. The places it helped were boilerplate (turning the
 OpenAPI schema into the JSON Schema files, generating the obvious
-DataProvider rows, drafting the docker-compose runner). The places I
-kept it out were scenario selection, the abstractions, the assumptions
-list, and anything that decides what the suite should actually catch.
-Unreviewed AI-generated tests I've inherited have been uniformly worse
-than hand-written ones, so I treat its output like a junior's first
+DataProvider rows, drafting the docker-compose runner). 
+I treat its output like a junior's first
 draft: useful starting point, every line read before it lands.
-
-See `ASSUMPTIONS.md` for every contract silence and `PART2_EVALUATION.md`
-for the five written answers.
