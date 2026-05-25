@@ -200,5 +200,5 @@ In rough order:
 I used it in a governed way: limited, tactical, never for the bits that
 need judgment. It helped with boilerplate. I treat its
 output the way I treat a junior's first draft: useful starting point,
-every line read.
+I read and check every line.
 
