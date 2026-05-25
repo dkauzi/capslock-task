@@ -44,8 +44,7 @@ so you can actually see it run if you want to.
 └── PART2_EVALUATION.md
 ```
 
-## The setup I'd use, and why
-
+## The setup I used and why
 Codeception with three modules: REST (Json part), PhpBrowser, Asserts.
 That's the minimum needed for a JSON API and it keeps the actor surface
 small enough that the autocomplete is useful.
@@ -55,7 +54,7 @@ Two custom helpers do most of the heavy lifting:
 * `ApiClient` is the single place that sets `Content-Type`/`Accept` headers
   and wraps `sendGet` / `sendPost` behind verbs like `listMediaBuyers()`
   and `createMediaBuyer($payload)`. Tests never touch raw HTTP. When auth
-  shows up, when we want correlation IDs, when retry-on-503 becomes a
+  shows up, when I addcorrelation IDs, when retry-on-503 becomes a
   thing, it's one file.
 * `SchemaValidator` wraps `justinrainbow/json-schema` so a response
   conformance check is one line: `$I->seeResponseMatchesJsonSchema('post-media-buyer-schema.json')`.
