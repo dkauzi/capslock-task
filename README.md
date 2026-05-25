@@ -2,9 +2,6 @@
 
 [![API tests](https://github.com/dkauzi/capslock-task/actions/workflows/api-tests.yml/badge.svg)](https://github.com/dkauzi/capslock-task/actions/workflows/api-tests.yml)
 
-<a href="https://github.com/dkauzi/capslock-task/actions/workflows/api-tests.yml">
-  <img src="https://github.com/dkauzi/capslock-task/actions/workflows/api-tests.yml/badge.svg" height="80">
-</a>
 
 
 [![API tests](https://img.shields.io/github/actions/workflow/status/dkauzi/capslock-task/api-tests.yml?style=for-the-badge&label=API%20tests)](https://github.com/dkauzi/capslock-task/actions/workflows/api-tests.yml)
