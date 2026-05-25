@@ -12,9 +12,21 @@ settings:
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
-    # In real CI add:
+    # Allure and Qase reporters are installed as dev dependencies
+    # (qase/codeception-reporter ^2.0, allure-framework/allure-codeception
+    # ^2.4) and enabled in CI by uncommenting below. Local docker runs
+    # leave them off so the suite stays self-contained and doesn't try to
+    # reach the Qase API.
+    #
+    #   - Qameta\Allure\Codeception\AllureCodeception
     #   - Qase\Codeception\Reporter
-    #   - Allure\Codeception\AllureCodeception
-    # with matching config blocks; see README "Reporting & test management".
+    #
+    # config:
+    #   Qameta\Allure\Codeception\AllureCodeception:
+    #     outputDirectory: tests/_output/allure-results
+    #   Qase\Codeception\Reporter:
+    #     projectCode: "%QASE_PROJECT_CODE%"
+    #     apiToken:    "%QASE_API_TOKEN%"
+    #     runComplete: true
 params:
     - .env
