@@ -101,7 +101,7 @@ A few choices worth flagging:
 
 * On the GET endpoint, the schema does the heavy lifting. Asserting each
   field in test methods would duplicate what the schema already states,
-  and that duplication rots the moment a field is added.
+  and that duplication fails the moment the field is changed.
 * `name` is tested at length 2 and 30, not just "too short". Off-by-one
   bugs show up at the upper bound first.
 * `active` boolean-to-integer coercion gets its own test. Asymmetric

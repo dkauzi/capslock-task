@@ -32,7 +32,7 @@ What I left out, with reasons:
   red on flaky network days. k6 or Locust against a perf environment is
   the right home.
 * **Auth flows.** The contract specifies none. Tests written for "what
-  auth probably looks like" rot the day someone adds the real thing.
+  auth probably looks like" break the day someone adds the real thing.
 * **Pagination, filtering, sorting.** The endpoint accepts no query
   parameters. Adding tests "just in case" trains the team to maintain
   dead code.
@@ -86,13 +86,13 @@ up as its own line in Allure and Qase. When row 4 fails you see *which*.
 And the `BACKEND` env switch with `skipIfBackendIsMock` lets the same
 suite run against a contract mock (clean CI gate) and a real environment
 (full assertions). Skips are named, reasoned, and disappear when the env
-flips. The alternative is permanent `@skip` tags that rot, or two
-divergent suites. Both of which I've inherited and don't recommend.
+flips. The alternative is permanent `@skip` tags nobody removes, or two
+divergent suites that drift apart. I've inherited both. Neither survives
+contact with a team.
 
-At 80 tests, the test methods should read almost exactly like they read
-at 8. That's the test of a good abstraction. If you find yourself
-explaining "yeah but you have to copy the boilerplate from here", the
-abstraction failed.
+The point of a good abstraction is that the test methods read at 80 the
+way they read at 8. If you find yourself explaining "yeah but you have
+to copy the boilerplate from over here", the abstraction failed.
 
 ## 3. Contract-drift detection
 
