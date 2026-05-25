@@ -8,49 +8,44 @@ on:
 jobs:
   codeception:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        php: ["8.2", "8.3"]
-
-    services:
-      mock-api:
-        image: stoplight/prism:5
-        ports: ["4010:4010"]
-        options: >-
-          --health-cmd="wget -q -O- http://localhost:4010/api/mediabuyers || exit 1"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          coverage: none
-          tools: composer:v2
+      - name: Start mock and runner
+        run: |
+          docker compose up -d
+          # Prism v4 needs a few seconds to bind
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            if curl -sf http://localhost:4010/api/mediabuyers > /dev/null; then
+              echo "mock-api is up"; break
+            fi
+            sleep 2
+          done
 
-      - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist
+      - name: Install PHP deps and build
+        run: |
+          docker compose exec -T runner sh -c '
+            cp -n .env.example .env &&
+            sed -i "s|^BASE_URL=.*|BASE_URL=http://mock-api:4010|" .env &&
+            composer install --no-interaction --prefer-dist &&
+            vendor/bin/codecept build
+          '
 
       - name: Run Codeception
-        env:
-          BASE_URL: http://localhost:4010
-          ENV: ci
-        run: vendor/bin/codecept run Api --steps --no-colors
+        run: |
+          docker compose exec -T -e BACKEND=mock -e ENV=ci runner sh -c '
+            vendor/bin/codecept run Api --no-colors
+          '
 
-      - name: Generate Allure report
-        if: always()
-        uses: simple-elf/allure-report-action@v1
-        with:
-          allure_results: tests/_output/allure-results
-          allure_history: allure-history
-
-      - name: Upload Allure report
+      - name: Upload Allure results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report-${{ matrix.php }}
-          path: allure-history
+          name: allure-results
+          path: tests/_output/allure-results
+          if-no-files-found: ignore
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
