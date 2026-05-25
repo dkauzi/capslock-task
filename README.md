@@ -1,5 +1,7 @@
 # Capslock QA Task
 
+By Denis Miano.
+
 PHP + Codeception tests for the Media Buyers API contract. The deliverable
 is the test code, not a runnable harness, but I included a Docker setup
 so you can actually see it run if you want to.
@@ -179,34 +181,25 @@ and the reasoning. Open questions worth flagging up front:
 
 ## Things I'd add before this suite hits 80 tests
 
-Roughly in the order I'd land them:
+In rough order:
 
-1. **Contract testing.** `mock/openapi.yaml` is already the source of
-   truth. Wire Dredd (or Pact for consumer-driven flows) into the backend
-   CI so a controller change that drifts from the spec fails before it
-   ever reaches this suite.
+1. **Contract testing.** `mock/openapi.yaml` is the source of truth. Wire
+   Dredd (or Pact for consumer flows) into backend CI so a controller
+   change that drifts from the spec fails there, not here.
 2. **Schema versioning.** Move `tests/schemas/` to `tests/schemas/v1/`.
-   When a breaking change ships, v1 is the regression suite for older
+   When a breaking change ships, v1 keeps the regression net for older
    clients and v2 grows alongside.
-3. **Test data lifecycle.** A `DbSeeder` helper that resets state via a
-   privileged `/test-support/reset` endpoint or `psql TRUNCATE` in CI.
-   Deterministic state beats clever cleanup.
-4. **Parallel runs.** `codecept run --shard 1/N` once the wall time goes
-   past three minutes. Needs shard-safe seeding, which is item 3.
-5. **Flake quarantine.** A `@group flaky` tag with a separate CI job that
-   reports but doesn't block. Flakes left in the main run train the team
-   to ignore red.
-6. **Golden-file regression.** For complex response bodies, snapshot a
-   known good response and diff. Cheap signal on accidental field
-   renames.
-7. **Correlation IDs.** `ApiClient` injects an `X-Test-Run` header on
-   every request. The backend logs it. One grep pulls every request a
-   failing test made.
+3. **Parallel runs.** `codecept run --shard 1/N` once the wall time goes
+   past three minutes. Needs shard-safe seeding (DB reset endpoint or
+   `psql TRUNCATE` between shards).
+4. **Correlation IDs in `ApiClient`.** An `X-Test-Run` header on every
+   request, logged by the backend. One grep pulls every request a failing
+   test made.
 
 ## On AI
 
-I used it the way a Govened way: limited, tactical, never for the bits
-that need judgment. The places it helped were boilerplate (turning the
+I used it in a governed way: limited, tactical, never for the bits that
+need judgment. The places it helped were boilerplate (turning the
 OpenAPI schema into the JSON Schema files, generating the obvious
 DataProvider rows, drafting the docker-compose runner). The places I
 kept it out were scenario selection, the abstractions, the assumptions
