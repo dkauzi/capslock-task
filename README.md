@@ -8,8 +8,10 @@ By Denis Miano.
 * **CI runs:** https://github.com/dkauzi/capslock-task/actions
 * **Latest results:** click the badge above for the most recent run summary
 
-PHP + Codeception tests for the Media Buyers API contract. The deliverable
-is the test code, not a runnable harness, but I included a Docker setup
+PHP + Codeception tests for the Media Buyers API contract. The deliverableis the test code, 
+not a runnable harness, but
+
+I included a Docker setup
 so you can actually see it run if you want to.
 
 ## What's in here
