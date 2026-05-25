@@ -130,8 +130,9 @@ Project: MB (Media Buyers)
 
 ## Running it
 
-The brief says I don't have to make this runnable. I did anyway, because
-"shipped but never ran" isn't something I'd put my name on.
+The brief says this doesn't have to be runnable. I made it run anyway.
+"Ship and learn" is a philosophy I live by, and "built it but never saw
+it work" isn't something I'd put my name on.
 
 Docker, two services: a Prism mock built from `mock/openapi.yaml` and a
 composer container that runs the suite against it.
