@@ -18,7 +18,6 @@ use Codeception\Example;
 final class CreateMediaBuyerCest
 {
     /**
-     * @qaseId 201
      * Covers P1.
      */
     public function validRequestReturns200AndMatchesSchema(ApiTester $I): void
@@ -34,7 +33,6 @@ final class CreateMediaBuyerCest
     }
 
     /**
-     * @qaseId 202
      * Covers P2 and P3: id is server-generated, request fields are echoed back.
      */
     public function responseEchoesRequestFieldsAndServerAssignsId(ApiTester $I): void
@@ -60,7 +58,6 @@ final class CreateMediaBuyerCest
     }
 
     /**
-     * @qaseId 203
      * Covers P4: boolean coerced to integer in the response.
      *
      * @dataProvider activeBooleans
@@ -86,7 +83,6 @@ final class CreateMediaBuyerCest
     }
 
     /**
-     * @qaseId 204
      * Covers P5: missing required field returns 400 with the field named.
      *
      * @dataProvider missingRequiredFields
@@ -119,7 +115,6 @@ final class CreateMediaBuyerCest
     }
 
     /**
-     * @qaseId 205
      * Covers P6: invalid email returns 400 and the bad value is echoed.
      */
     public function invalidEmailReturns400(ApiTester $I): void
@@ -140,7 +135,6 @@ final class CreateMediaBuyerCest
     }
 
     /**
-     * @qaseId 206
      * Covers P7: initials must be exactly 2 characters.
      */
     public function initialsLongerThan2Returns400(ApiTester $I): void
@@ -161,7 +155,6 @@ final class CreateMediaBuyerCest
     }
 
     /**
-     * @qaseId 207
      * Covers P8: name length boundaries (2..30 inclusive).
      *
      * @dataProvider nameLengthCases
@@ -192,7 +185,6 @@ final class CreateMediaBuyerCest
     }
 
     /**
-     * @qaseId 208
      * Covers P9: mbId must be a non-empty string of digits (positive integer).
      *
      * @dataProvider invalidMbIds
@@ -220,7 +212,6 @@ final class CreateMediaBuyerCest
     }
 
     /**
-     * @qaseId 209
      * Covers P10: active must be a boolean.
      *
      * @dataProvider nonBooleanActiveValues
@@ -247,7 +238,6 @@ final class CreateMediaBuyerCest
     }
 
     /**
-     * @qaseId 210
      * Covers P11: duplicate mbId rejected on second create.
      *
      * ASSUMPTION: contract leaves the status open (400 or 409). We accept
