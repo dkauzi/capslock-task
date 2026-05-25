@@ -6,3 +6,4 @@ tests/_support/_generated/
 .idea/
 .vscode/
 .phpunit.cache/
+.DS_Store

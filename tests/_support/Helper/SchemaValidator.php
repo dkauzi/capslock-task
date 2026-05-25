@@ -10,9 +10,9 @@ use JsonSchema\Validator;
 use JsonSchema\Constraints\Constraint;
 
 /**
- * SchemaValidator — validates the last REST response against a JSON Schema file
- * stored under tests/schemas/. Wraps justinrainbow/json-schema so test methods
- * stay one-liners.
+ * Validates the last REST response against a JSON Schema file stored under
+ * tests/schemas/. Wraps justinrainbow/json-schema so test methods stay
+ * one-liners.
  */
 class SchemaValidator extends Module
 {

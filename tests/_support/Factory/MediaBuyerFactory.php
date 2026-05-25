@@ -11,7 +11,7 @@ namespace Tests\Factory;
  *   MediaBuyerFactory::valid()->without('email')->build();
  *   MediaBuyerFactory::valid()->with(['initials' => 'TOO LONG'])->build();
  *
- * Negative tests express WHAT is wrong, not WHAT JSON looks like — when the
+ * Negative tests express what's wrong, not what the JSON looks like. When the
  * schema evolves, only this class and the FieldGenerators change.
  */
 final class MediaBuyerFactory

@@ -7,7 +7,7 @@ namespace Tests\Helper;
 use Codeception\Module;
 
 /**
- * ApiClient — thin wrapper over the REST module that:
+ * ApiClient is a thin wrapper over the REST module that:
  *   - sets Content-Type / Accept headers required by the contract
  *   - exposes resource-shaped methods (createMediaBuyer, listMediaBuyers)
  *
