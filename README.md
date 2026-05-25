@@ -205,7 +205,7 @@ Roughly in the order I'd land them:
 
 ## On AI
 
-I used it the way a senior would: limited, tactical, never for the bits
+I used it the way a Govened way: limited, tactical, never for the bits
 that need judgment. The places it helped were boilerplate (turning the
 OpenAPI schema into the JSON Schema files, generating the obvious
 DataProvider rows, drafting the docker-compose runner). The places I
