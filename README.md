@@ -6,21 +6,20 @@ By Denis Miano.
 
 * **Repo:** https://github.com/dkauzi/capslock-task
 * **CI runs:** https://github.com/dkauzi/capslock-task/actions
-* **Latest results:** click the badge above for the most recent run summary
+* **Latest results:** click the badge above
 
-PHP + Codeception tests for the Media Buyers API contract. The deliverableis the test code, 
-not a runnable harness, but
+PHP + Codeception tests for the Media Buyers API contract. The brief says
+the test code is what's being judged, not whether it runs, so that's
+where I put the effort. A Docker setup is included so you can actually
+see it execute if you want to.
 
-I included a Docker setup
-so you can actually see it run if you want to.
-
-## What's in here
+## Layout
 
 ```
 .
 ├── codeception.yml
 ├── composer.json
-├── docker-compose.yml          prism mock + composer runner (optional)
+├── docker-compose.yml          prism mock + composer runner
 ├── mock/openapi.yaml           the contract, in OpenAPI 3
 ├── .github/workflows/api-tests.yml
 ├── tests/
@@ -44,38 +43,34 @@ so you can actually see it run if you want to.
 └── PART2_EVALUATION.md
 ```
 
-## The setup I used and why
-Codeception with three modules: REST (Json part), PhpBrowser, Asserts.
-That's the minimum needed for a JSON API and it keeps the actor surface
-small enough that the autocomplete is useful.
+## The setup
 
-Two custom helpers do most of the heavy lifting:
+Codeception with REST (Json part), PhpBrowser, and Asserts. That's the
+minimum for a JSON API and it keeps the actor's autocomplete useful.
 
-* `ApiClient` is the single place that sets `Content-Type`/`Accept` headers
-  and wraps `sendGet` / `sendPost` behind verbs like `listMediaBuyers()`
-  and `createMediaBuyer($payload)`. Tests never touch raw HTTP. When auth
-  shows up, when I addcorrelation IDs, when retry-on-503 becomes a
-  thing, it's one file.
-* `SchemaValidator` wraps `justinrainbow/json-schema` so a response
-  conformance check is one line: `$I->seeResponseMatchesJsonSchema('post-media-buyer-schema.json')`.
+Two custom helpers do the heavy lifting:
 
-Payloads come from a fluent factory, not hard-coded JSON. You'll see
-calls like `MediaBuyerFactory::valid()->without('email')->build()` and
+* `ApiClient` is the one place that sets `Content-Type`/`Accept` and wraps
+  `sendGet`/`sendPost` behind resource verbs like `listMediaBuyers()` and
+  `createMediaBuyer($payload)`. Tests don't touch raw HTTP. When auth, or
+  retry, or correlation IDs show up, it's one file to change.
+* `SchemaValidator` wraps `justinrainbow/json-schema` so a response check
+  is one line: `$I->seeResponseMatchesJsonSchema('post-media-buyer-schema.json')`.
+
+Payloads come from a fluent factory, not hard-coded JSON. Tests look
+like `MediaBuyerFactory::valid()->without('email')->build()` or
 `MediaBuyerFactory::valid()->with(['initials' => 'TOO LONG'])->build()`.
-Negative tests get to describe *what's wrong*, not restate the whole
-payload.
+Negative tests describe what's wrong, not the whole payload.
 
-For boundaries and the parameterised contract cases (P5, P8, P9, P10),
-each variation is a row in a DataProvider, not a copy-pasted method.
-That way a new edge case is one array entry and shows up as its own line
-in the test report.
+Parameterised cases (P5, P8, P9, P10) use DataProviders. A new boundary
+is one array row and shows up as its own line in the report.
 
-## Scenario coverage
+## What's covered
 
 15 test methods cover all 18 acceptance criteria. With DataProviders they
-expand into 29 cases when the suite runs.
+expand into 29 cases.
 
-GET endpoint:
+GET:
 
 * G1: `returnsHttp200WithJsonContentType`
 * G2, G4, G5, G6: `responseMatchesSchema` (the schema enforces required
@@ -83,7 +78,7 @@ GET endpoint:
 * G3: `dataIsArrayEvenWhenEmpty`
 * G7: `idsAreUniqueAcrossResponse`
 
-POST endpoint:
+POST:
 
 * P1: `validRequestReturns200AndMatchesSchema`
 * P2, P3: `responseEchoesRequestFieldsAndServerAssignsId`
@@ -91,37 +86,34 @@ POST endpoint:
 * P5: `missingRequiredFieldReturns400` (4 rows: mbId, name, email, active)
 * P6: `invalidEmailReturns400`
 * P7: `initialsLongerThan2Returns400`
-* P8: `nameLengthBoundaries` (5 rows, both sides of the range)
+* P8: `nameLengthBoundaries` (5 rows, both ends)
 * P9: `mbIdMustBePositiveIntegerString` (5 rows: "abc", "-1", "1.5", "", "0")
 * P10: `activeNonBooleanReturns400` (4 rows)
 * P11: `duplicateMbIdRejected`
 
-A few choices worth pointing out:
+A few choices worth flagging:
 
-* Schema validation does the heavy lifting on the GET endpoint. Asserting
-  individual fields in test methods would just duplicate what the schema
-  already says, and that duplication rots the moment a field gets added.
-* Length 2 *and* 30 for `name`. Off-by-one regressions show up at the
-  upper bound first, and most candidates only test "too short".
-* `active` coercion (boolean to integer) gets its own test, not a side
-  assertion. That kind of asymmetric mapping is a recurring source of
-  cross-service bugs, and it deserves a labelled line in the report.
+* On the GET endpoint, the schema does the heavy lifting. Asserting each
+  field in test methods would duplicate what the schema already states,
+  and that duplication rots the moment a field is added.
+* `name` is tested at length 2 and 30, not just "too short". Off-by-one
+  bugs show up at the upper bound first.
+* `active` boolean-to-integer coercion gets its own test. Asymmetric
+  coercions are a classic source of cross-service bugs and deserve a
+  labelled line in the report.
 * P11 asserts a client-error class, not 400 vs 409. The contract leaves
-  the exact code open, so locking it down would couple the suite to a
-  backend choice.
+  the status open; pinning it would couple this suite to a backend
+  decision.
 
 ## Reporting
 
-Allure and Qase are the JD's stack, and both are wired into
-`codeception.yml`. I disabled them in `require-dev` only because the Qase
-v1 package conflicts with Codeception 5 in solver. In a real CI you'd
-add `allure-framework/allure-codeception` and `qase-tms/codeception-reporter`
-(the v2 fork that supports Codeception 5), and the Allure outputs land in
-`tests/_output/allure-results` ready for `allure serve`.
+Allure and Qase are both in `composer.json`
+(`allure-framework/allure-codeception ^2.4` and
+`qase/codeception-reporter ^2.0`). They're commented out in
+`codeception.yml`'s `extensions.enabled` so the docker run stays
+self-contained and offline. Uncomment to wire them up in CI.
 
-Each test method has a `@qaseId` annotation in the docblock so the Qase
-case ID and the test method stay linked both ways. The Qase project
-mirrors the file tree:
+The Qase project I'd mirror against the file tree:
 
 ```
 Project: MB (Media Buyers)
@@ -130,18 +122,13 @@ Project: MB (Media Buyers)
     Section: POST /api/mediabuyers   → CreateMediaBuyerCest
 ```
 
-Bug reports for the manual part (`MANUAL_BUGS.md`) follow the ClickUp
-template the QA team uses: title, description, steps, expected, actual,
-severity, environment.
-
 ## Running it
 
-The brief says I don't need to make it runnable. I did anyway, because
-"I built it but never saw it work" isn't a thing I'd ship.
+The brief says I don't have to make this runnable. I did anyway, because
+"shipped but never ran" isn't something I'd put my name on.
 
-There's a Docker setup with two services: a Prism mock derived from
-`mock/openapi.yaml`, and a composer container that runs the suite against
-the mock.
+Docker, two services: a Prism mock built from `mock/openapi.yaml` and a
+composer container that runs the suite against it.
 
 ```bash
 docker compose up -d
@@ -154,39 +141,38 @@ docker compose exec runner sh -c '
 '
 ```
 
-Result: 29 tests, 25 pass, 4 skipped. The skips are real assertions that
-need a real backend (request echo, boolean coercion, mbId uniqueness),
-and they're gated by an env switch.
+29 tests, 25 pass, 4 skipped. The skips are real assertions that need a
+real backend (request echo, boolean coercion, mbId uniqueness), gated by
+the env switch below.
 
-### The BACKEND switch
+### The `BACKEND` switch
 
-The same suite runs against the contract mock and a real environment.
-Tests that need behaviour only a real backend can produce call
-`$I->skipIfBackendIsMock('reason')`, and the skip disappears when you
-flip the env:
+Same suite, two environments. Tests that need behaviour only a real
+backend can produce call `$I->skipIfBackendIsMock('reason')`. The skip
+disappears the moment you point at staging:
 
 ```bash
-BACKEND=mock vendor/bin/codecept run Api          # default, CI gate
+BACKEND=mock vendor/bin/codecept run Api                                 # default
 BACKEND=real BASE_URL=https://staging.example.com vendor/bin/codecept run Api
 ```
 
-This is the bit I'd want a reviewer to notice. The alternative is
-permanent `@skip` tags that nobody removes, or two divergent suites that
-drift. I've inherited both, and neither survives contact with a team.
+The alternative is permanent `@skip` tags nobody removes, or two
+divergent suites that drift apart. I've inherited both. Neither survives
+contact with a team.
 
 ## Assumptions
 
-Every place the contract is silent is in `ASSUMPTIONS.md` with the choice
-and the reasoning. Open questions worth flagging up front:
+Every contract silence is in `ASSUMPTIONS.md`. The ones worth flagging
+here:
 
 * Duplicate `mbId` returns 400 or 409. Test accepts either.
 * Empty list returns 200 with `{"data": []}`. Contract guarantees the
   array shape, not the status, but 200 is the only consistent reading.
 * `active: true` produces `active: 1` in the response. Contract states
-  this; I flagged it because asymmetric coercions cause bugs.
-* `initials` is optional. The "if provided" wording is treated literally.
+  this. I flagged it because asymmetric coercions cause bugs.
+* `initials` is optional. The "if provided" wording is read literally.
 
-## Things I'd add before this suite hits 80 tests
+## What I'd add next
 
 In rough order:
 
@@ -195,19 +181,25 @@ In rough order:
    change that drifts from the spec fails there, not here.
 2. **Schema versioning.** Move `tests/schemas/` to `tests/schemas/v1/`.
    When a breaking change ships, v1 keeps the regression net for older
-   clients and v2 grows alongside.
-3. **Parallel runs.** `codecept run --shard 1/N` once the wall time goes
-   past three minutes. Needs shard-safe seeding (DB reset endpoint or
+   clients while v2 grows alongside.
+3. **Parallel runs.** `codecept run --shard 1/N` once wall time crosses
+   three minutes. Needs shard-safe seeding (DB reset endpoint or
    `psql TRUNCATE` between shards).
 4. **Correlation IDs in `ApiClient`.** An `X-Test-Run` header on every
-   request, logged by the backend. One grep pulls every request a failing
-   test made.
+   request, logged by the backend. One grep then pulls every request a
+   failing test made.
 
 ## On AI
 
 I used it in a governed way: limited, tactical, never for the bits that
-need judgment. The places it helped were boilerplate (turning the
-OpenAPI schema into the JSON Schema files, generating the obvious
-DataProvider rows, drafting the docker-compose runner). 
-I treat its output like a junior's first
-draft: useful starting point, every line read before it lands.
+need judgment. It helped with boilerplate (turning the OpenAPI schema
+into JSON Schema files, the obvious DataProvider rows, drafting the
+docker-compose runner). I kept it out of scenario selection, the
+abstractions, the assumptions list, and anything that decides what the
+suite should actually catch. The unreviewed AI-generated tests I've
+inherited have all been worse than hand-written ones, so I treat its
+output the way I treat a junior's first draft: useful starting point,
+every line read.
+
+See `ASSUMPTIONS.md` for every contract silence, `PART2_EVALUATION.md`
+for the written answers, `SUBMISSION.md` for how to run this.

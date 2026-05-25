@@ -106,11 +106,11 @@ If you have fifteen:
 
 ## If something breaks
 
-The most likely failure is on `composer install` because the upstream
-Allure or Qase reporter package version doesn't resolve against
-Codeception 5. Both are commented out in `composer.json` for that
-reason; the reporting wiring is in `codeception.yml` ready to be
-re-enabled once the versions line up in your environment.
+`composer install` should resolve cleanly. Allure
+(`allure-framework/allure-codeception ^2.4`) and Qase
+(`qase/codeception-reporter ^2.0`) are both installed. They're not
+enabled in `codeception.yml`'s `extensions.enabled` so the docker run
+stays self-contained; uncomment those two lines to wire them up in CI.
 
 If Docker can't pull `stoplight/prism:4`, swap it for `:5` in
 `docker-compose.yml` and rebuild. On macOS with the VS Code extension

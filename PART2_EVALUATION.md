@@ -1,31 +1,29 @@
 # Part 2, Written Evaluation
 
-A note on voice before the questions. I'm writing this the way I'd write
-a design doc for the team, not a sales pitch. Where I'm guessing I'll say
-so; where I'm leaning on something I've shipped before I'll point at the
-scar tissue.
+Quick note on voice. This is written the way I'd write a design doc for
+the team rather than a pitch. Where I'm guessing I'll flag it; where I'm
+pulling from past projects I'll say so.
 
 ## 1. Which scenarios I picked, and what I left out
 
-I picked scenarios on three axes, in order of importance.
+Three priorities, in this order.
 
-First, every acceptance criterion gets at least one test. That's table
-stakes. If the contract says "G3: empty list returns `{data: []}`", there
-has to be a test that fails when that breaks. If a candidate skips that
-to chase a clever edge case, they've missed the brief.
+Every acceptance criterion gets at least one test. That's non-negotiable.
+If the contract says "G3: empty list returns `{data: []}`", there has to
+be a test that breaks when that breaks. Anything that skips an AC to
+chase a clever edge case has misread the brief.
 
-Second, both sides of every boundary. Name length 2 *and* 30, not just
-"too short". The most common silent regression I've shipped (and
-inherited) is an off-by-one in payload validators where the lower bound
-got attention and the upper bound didn't. Two array rows in a
-DataProvider catches a whole class of bugs.
+Both sides of every boundary. Name length 2 and 30, not just "too short".
+The most common silent regression I've seen (and inherited) is an
+off-by-one in payload validators where the lower bound got attention and
+the upper bound didn't. Two rows in a DataProvider catches the whole
+class.
 
-Third, the asymmetric coercions get their own test. `active: true` goes
-in, `active: 1` comes out. That's the contract, but it's also the exact
-kind of behaviour that quietly breaks when someone refactors a serializer
-and "fixes" the asymmetry. Promoting it to its own test method, instead
-of folding it into the happy path, means the report points to the right
-line when it breaks.
+Asymmetric coercions get their own test. `active: true` in, `active: 1`
+out. That's the contract, but it's also the kind of thing that quietly
+breaks when someone refactors a serializer and "fixes" the asymmetry.
+Putting it on its own test method, instead of folding it into a happy
+path, means the report points to the right line when it breaks.
 
 What I left out, with reasons:
 
@@ -47,8 +45,7 @@ What I left out, with reasons:
 
 ## 2. The abstractions and what they buy as the suite grows
 
-There are five of them. I'll explain each in the order I'd build them on
-a real project.
+Five of them. In the order I built them:
 
 `MediaBuyerFactory` is the most important one. Hard-coded JSON in test
 methods is the single largest source of test rot I've seen. When the
@@ -115,9 +112,9 @@ The tooling I'd reach for:
   its own OpenAPI document.
 * **Pact** for any consumer that talks to this API in production. The
   consumer publishes its expectations; the provider verifies them in CI.
-  Catches the "we changed the field, nobody told the dashboard" class of
-  break, which is the one that always sneaks past code review because
-  the change looks harmless.
+  That's the one that catches "we changed the field, nobody told the
+  dashboard" breaks, which always sneak past code review because the
+  change looks harmless.
 
 The process side matters as much as the tools. The drift PR has to land
 in the QA repo with a checklist auto-generated from the diff (added
@@ -136,9 +133,9 @@ with mechanical detection on both sides.
 
 ## 4. Tools for generation, maintenance, flakiness, reporting
 
-I'll answer the AI part of this honestly because I think it's the
-differentiator. I use AI like a senior: limited, tactical, and never for
-the things that need judgment. I'll be specific about where it earns its
+I'll be straight on the AI part because that's the one this question is
+really asking about. I use AI in a governed way: limited, tactical,
+never for the bits that need judgment. Specifics on where it earns its
 keep and where I keep it out.
 
 **Test generation.** The highest-leverage automation here isn't AI. It's
