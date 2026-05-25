@@ -197,14 +197,7 @@ In rough order:
 ## On AI
 
 I used it in a governed way: limited, tactical, never for the bits that
-need judgment. It helped with boilerplate (turning the OpenAPI schema
-into JSON Schema files, the obvious DataProvider rows, drafting the
-docker-compose runner). I kept it out of scenario selection, the
-abstractions, the assumptions list, and anything that decides what the
-suite should actually catch. The unreviewed AI-generated tests I've
-inherited have all been worse than hand-written ones, so I treat its
+need judgment. It helped with boilerplate. I treat its
 output the way I treat a junior's first draft: useful starting point,
 every line read.
 
-See `ASSUMPTIONS.md` for every contract silence, `PART2_EVALUATION.md`
-for the written answers, `SUBMISSION.md` for how to run this.
