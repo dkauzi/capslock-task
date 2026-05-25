@@ -1,5 +1,7 @@
 # Capslock QA Task
 
+[![API tests](https://github.com/dkauzi/capslock-task/actions/workflows/api-tests.yml/badge.svg)](https://github.com/dkauzi/capslock-task/actions/workflows/api-tests.yml)
+
 By Denis Miano.
 
 PHP + Codeception tests for the Media Buyers API contract. The deliverable
