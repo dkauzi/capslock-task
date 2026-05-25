@@ -2,6 +2,11 @@
 
 [![API tests](https://github.com/dkauzi/capslock-task/actions/workflows/api-tests.yml/badge.svg)](https://github.com/dkauzi/capslock-task/actions/workflows/api-tests.yml)
 
+<a href="https://github.com/dkauzi/capslock-task/actions/workflows/api-tests.yml">
+  <img src="https://github.com/dkauzi/capslock-task/actions/workflows/api-tests.yml/badge.svg" height="60">
+</a>
+
+
 By Denis Miano.
 
 * **Repo:** https://github.com/dkauzi/capslock-task
