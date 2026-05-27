@@ -110,7 +110,7 @@ three has never worked in the teams I've been on.
 ## 5. The hardest E2E problem I've owned
 
 At Sulake, a release-blocking suite of around 600 E2E tests had
-drifted to a 12% flake rate. Engineers retried red runs until they
+drifted to a 12% rate flake . Engineers retried red runs until they
 went green. QA had stopped triaging because the signal was lost.
 
 I spent two weeks tagging every failure with a signature before
