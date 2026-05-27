@@ -17,6 +17,7 @@ extensions:
     # ^2.4) and enabled in CI by uncommenting below. The local docker run
     # leaves them off so the suite stays self-contained.
     #   - Qameta\Allure\Codeception\AllureCodeception
+    
     #   - Qase\Codeception\Reporter
 params:
     - .env
