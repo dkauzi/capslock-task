@@ -90,7 +90,7 @@ BACKEND=real BASE_URL=https://your-staging-host.example.com \
   vendor/bin/codecept run Api
 ```
 
-## What to read first
+## What to check first
 
 If you have five minutes:
 
