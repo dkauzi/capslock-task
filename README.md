@@ -12,7 +12,7 @@ By Denis Miano.
 
 * **Repo:** https://github.com/dkauzi/capslock-task
 * **CI runs:** https://github.com/dkauzi/capslock-task/actions
-* **Latest results:** click the badge above
+* **Latest results:** [![API tests](https://img.shields.io/github/actions/workflow/status/dkauzi/capslock-task/api-tests.yml?style=for-the-badge&label=API%20tests)](https://github.com/dkauzi/capslock-task/actions/workflows/api-tests.yml)
 
 PHP + Codeception tests for the Media Buyers API contract. The brief says
 the test code is what's being judged, not whether it runs, so that's
