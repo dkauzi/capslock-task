@@ -4,7 +4,7 @@
 
 
 
-[![API tests](https://img.shields.io/github/actions/workflow/status/dkauzi/capslock-task/api-tests.yml?style=for-the-badge&label=API%20tests)](https://github.com/dkauzi/capslock-task/actions/workflows/api-tests.yml)
+
 
 
 
